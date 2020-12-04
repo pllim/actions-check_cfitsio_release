@@ -1,0 +1,7 @@
+name: 'Check CFITSIO release'
+description: 'Open issue if CFITSIO has a new release.'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+  - 'none'
