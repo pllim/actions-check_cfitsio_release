@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check release
-      uses: pllim/action-check_cfitsio_release@main
+      uses: pllim/actions-check_cfitsio_release@main
       env:
         CFITSIO_CHECK_N_DAYS: 7
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
