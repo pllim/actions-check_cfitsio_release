@@ -20,6 +20,7 @@ jobs:
   check_cfitsio:
     name: Open issue if new release found
     runs-on: ubuntu-latest
+    steps:
     - name: Check release
       uses: pllim/action-check_cfitsio_release@main
       env:
