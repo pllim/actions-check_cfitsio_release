@@ -2,7 +2,6 @@
 Matt Rendina (@redinam)
 
 """
-import json
 import os
 import re
 import sys
@@ -11,12 +10,7 @@ from datetime import datetime, timedelta
 import requests
 from github import Github
 
-event_jsonfile = os.environ['GITHUB_EVENT_PATH']
-
-with open(event_jsonfile, encoding='utf-8') as fin:
-    event = json.load(fin)
-
-repo_name = event['repository']['full_name']
+repo_name = os.environ['GITHUB_REPOSITORY']
 g = Github(os.environ.get('GITHUB_TOKEN'))
 repo = g.get_repo(repo_name)
 
