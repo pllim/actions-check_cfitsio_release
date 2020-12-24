@@ -1,7 +1,14 @@
 name: 'Check CFITSIO release'
 description: 'Open issue if CFITSIO has a new release.'
+author: 'pllim'
+inputs:
+  CFITSIO_CHECK_N_DAYS:
+    description: 'Only a release made in this last N number of days counts as new'
+    default: 7
+    required: false
+  GITHUB_TOKEN:
+    description: 'GitHub token'
+    required: true
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-  - 'none'
+  using: 'node12'
+  main: 'dist/index.js'
