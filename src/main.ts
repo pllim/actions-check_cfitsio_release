@@ -14,7 +14,7 @@ async function run() {
         const changes_url = 'https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/docs/changes.txt';
         const response_changes = await fetch(changes_url, {headers: headers});
         const last_modified = new Date(response_changes.headers.get('last-modified'));
-        core.info(`DEBUG: last-modified ${last_modified}`);
+        console.log(`DEBUG: last-modified ${last_modified}`);
 
         if (last_modified.getTime() < n_days_ago) {
             core.info(`Last CFITSIO release made on ${last_modified.toISOString()} before ${new Date(n_days_ago).toISOString()}, nothing to do.`);
@@ -32,7 +32,7 @@ async function run() {
         const cfitsio_version = m[1];
         m = fitsio_content.match('#define CFITSIO_SONAME ([0-9])');
         const cfitsio_soname = m[1];
-        core.info(`DEBUG: CFITSIO_VERSION=${cfitsio_version} CFITSIO_SONAME=${cfitsio_soname}`);
+        console.log(`DEBUG: CFITSIO_VERSION=${cfitsio_version} CFITSIO_SONAME=${cfitsio_soname}`);
 
         const changes_content = await response_changes.text();
         const changes_lines = changes_content.split("\n");
