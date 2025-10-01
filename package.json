@@ -24,7 +24,7 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.38.3",
-    "typescript": "^5.9.2"
+    "@vercel/ncc": "^0.38.4",
+    "typescript": "^5.9.3"
   }
 }
