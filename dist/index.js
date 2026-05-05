@@ -56,16 +56,11 @@ function run() {
             }
             const gh_token = core.getInput("GITHUB_TOKEN", { required: true });
             const octokit = github.getOctokit(gh_token);
-            const fitsio_h_url = 'https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/fitsio.h';
-            const response_fitsio = yield fetch(fitsio_h_url, { headers: headers });
-            const fitsio_content = yield response_fitsio.text();
-            let m = fitsio_content.match('#define CFITSIO_VERSION ([0-9.]*)');
-            const cfitsio_version = m[1];
-            m = fitsio_content.match('#define CFITSIO_SONAME ([0-9])');
-            const cfitsio_soname = m[1];
             const changes_content = yield response_changes.text();
             const changes_lines = changes_content.split("\n");
             let found_ver = false;
+            let cfitsio_version = 'unknown';
+            let cfitsio_reldate = 'unknown';
             const latest_change_lines = [];
             for (let i = 0; i < changes_lines.length; i++) {
                 let line = changes_lines[i];
@@ -75,6 +70,9 @@ function run() {
                     }
                     else {
                         found_ver = true;
+                        let words = line.split(/\s+/);
+                        cfitsio_version = words[1];
+                        cfitsio_reldate = `${words[3]} ${words[4]}`;
                         latest_change_lines.push(line);
                     }
                 }
@@ -86,8 +84,7 @@ function run() {
             const issue_title = `ANN: New CFITSIO ${cfitsio_version} released`;
             const issue_body = `New CFITSIO release found.
 
-Version: ${cfitsio_version}
-SONAME: ${cfitsio_soname}
+Version: ${cfitsio_version} (${cfitsio_reldate})
 
 #### Change log
 
@@ -5995,7 +5992,7 @@ module.exports = require("zlib");;
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -6008,7 +6005,7 @@ module.exports = require("zlib");;
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
@@ -6017,14 +6014,14 @@ module.exports = require("zlib");;
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat */
-/******/ 	
+/******/
 /******/ 	__nccwpck_require__.ab = __dirname + "/";/************************************************************************/
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup

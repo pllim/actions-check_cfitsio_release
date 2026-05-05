@@ -24,19 +24,11 @@ async function run() {
         const gh_token = core.getInput("GITHUB_TOKEN", { required: true });
         const octokit = github.getOctokit(gh_token);
 
-        const fitsio_h_url = 'https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/fitsio.h';
-        const response_fitsio = await fetch(fitsio_h_url, {headers: headers});
-        const fitsio_content = await response_fitsio.text();
-
-        let m = fitsio_content.match('#define CFITSIO_VERSION ([0-9.]*)');
-        const cfitsio_version = m[1];
-        m = fitsio_content.match('#define CFITSIO_SONAME ([0-9])');
-        const cfitsio_soname = m[1];
-        core.debug(`DEBUG: CFITSIO_VERSION=${cfitsio_version} CFITSIO_SONAME=${cfitsio_soname}`);
-
         const changes_content = await response_changes.text();
         const changes_lines = changes_content.split("\n");
         let found_ver:boolean = false;
+        let cfitsio_version:string = 'unknown';
+        let cfitsio_reldate:string = 'unknown';
         const latest_change_lines:Array<string> = [];
         for (let i = 0; i < changes_lines.length; i++) {
             let line:string = changes_lines[i];
@@ -45,6 +37,9 @@ async function run() {
                     break;
                 } else {
                     found_ver = true;
+                    let words = line.split(/\s+/);
+                    cfitsio_version = words[1];
+                    cfitsio_reldate = `${words[3]} ${words[4]}`;
                     latest_change_lines.push(line);
                 }
             } else if (found_ver) {
@@ -56,8 +51,7 @@ async function run() {
         const issue_title = `ANN: New CFITSIO ${cfitsio_version} released`;
         const issue_body = `New CFITSIO release found.
 
-Version: ${cfitsio_version}
-SONAME: ${cfitsio_soname}
+Version: ${cfitsio_version} (${cfitsio_reldate})
 
 #### Change log
 
